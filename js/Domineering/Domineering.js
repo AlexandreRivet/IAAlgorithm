@@ -6,7 +6,7 @@ var DomineeringGame = function (w, h, id) {
 	this.canvas.height = this.canvas.clientHeight;
 	this.ctx = this.canvas.getContext('2d');
 
-	this.players = [new Human(PlayerType.HORI), new IA(PlayerType.VERT)];
+	this.players = [new IA(PlayerType.HORI), new IA(PlayerType.VERT)];
 	this.currentPlayer = -1;
 
 	this.currentMove = null;
