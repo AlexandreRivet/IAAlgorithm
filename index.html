@@ -4,27 +4,73 @@
 
 	<title>Domineering</title>
 
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-		}
-		
-		#domineering-game {
-			width: 100%;
-			height: 100%;
-		}
-	</style>
-
+	<link rel="stylesheet" href="css/main-style.css">
 </head>
 
-
 <body>
+	<div id="mask"></div>
+	<h1>DOMINEERING<span class="mini"> IN </span>CANVAS<span class="mini"> BY </span><div class="name"><div>Alexandre RIVET</div><div>Maxime HELAINE</div></div></h1>
 
-	<canvas id="domineering-game">Your browser does not seem to support canvas</canvas>
+	<section id="all">
+		<section id="content">
+			<canvas id="domineering-game" height="550" width="550" oncontextmenu="return false;">Your browser doesn't support the
+				<canvas> tag.</canvas>
+		</section>
 
+		<section class="options">
+			<div id="start-stop">
+				<input type="button" id="button" value="START">
+			</div>
+			<br/>
+			<label for="TypeOfGame">Game mode: </label>
+			<div id="TypeOfGame" class="radio_area">
+				<input type="radio" name="radio_typeGame" value="0" class="detection_checkbox" checked> IA vs IA
+				<input type="radio" name="radio_typeGame" value="1" class="detection_checkbox"> IA vs Human
+				<input type="radio" name="radio_typeGame" value="2" class="detection_checkbox"> Human vs Human
+			</div>
+			<div id="AIType">
+				<label for="AITypeEvaluation">AI Type mode: </label>
+				<div id="AITypeEvaluation" class="radio_area">
+					<input type="radio" name="radio_AIType" value="0" class="detection_checkbox" checked> MinMax
+					<input type="radio" name="radio_AIType" value="1" class="detection_checkbox"> Negamax
+					<input type="radio" name="radio_typeGame" value="2" class="detection_checkbox"> MinMax AB
+					<input type="radio" name="radio_typeGame" value="3" class="detection_checkbox"> Negamax AB
+				</div>
+
+			</div>
+			<!--<label for="NumBoids">Boids: <span id="NumBoidsValue">20</span></label>
+			<div id="NumBoids"></div>
+			<br/>
+			<label for="Alignment"><img src="images/helper.png" id="alignment_helper" class="helper">Alignment: <span id="AlignmentValue">1</span></label>
+			<div id="Alignment"></div>
+			<br/>
+			<label for="Cohesion"><img src="images/helper.png" id="cohesion_helper" class="helper">Cohesion: <span id="CohesionValue">2</span></label>
+			<div id="Cohesion"></div>
+			<br/>
+			<label for="Separation"><img src="images/helper.png" id="separation_helper" class="helper">Separation: <span id="SeparationValue">5</span></label>
+			<div id="Separation"></div>
+			<br/>
+			<label for="SeparationDistance">Separation distance: <span id="SeparationDistanceValue">50</span></label>
+			<div id="SeparationDistance"></div>
+			<br/>
+			<label for="TypeOfDetection">Detection type: </label>
+			<div id="TypeOfDetection" class="radio_area">
+				<input type="radio" name="radio_dectection" value="0" class="detection_checkbox" checked> None
+				<input type="radio" name="radio_dectection" value="1" class="detection_checkbox"> Death
+				<input type="radio" name="radio_dectection" value="2" class="detection_checkbox"> Collision
+			</div>
+			<br/>
+			<br/>
+			<label for="Debug">Debug options: </label>
+			<div id="Debug" class="radio_area">
+				<input type="radio" name="radio_debug" value="0" class="detection_checkbox" checked> None
+				<input type="radio" name="radio_debug" value="1" class="detection_checkbox"> Label
+				<input type="radio" name="radio_debug" value="2" class="detection_checkbox"> Position
+				<input type="radio" name="radio_debug" value="3" class="detection_checkbox"> Raycast
+			</div>-->
+		</section>
+	</section>
 </body>
-
 <script src="js/Domineering/Board.js"></script>
 <script src="js/Domineering/Move.js."></script>
 <script src="js/Domineering/Player.js"></script>
