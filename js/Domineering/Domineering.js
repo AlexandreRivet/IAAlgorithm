@@ -1,15 +1,38 @@
-var DomineeringGame = function (w, h, id) {
+var DomineeringGame = function (id) {
 
-	this.board = new Board(w, h);
 	this.canvas = document.getElementById(id);
 	this.canvas.width = this.canvas.clientWidth;
 	this.canvas.height = this.canvas.clientHeight;
 	this.ctx = this.canvas.getContext('2d');
 
-	this.players = [new IA(PlayerType.HORI), new IA(PlayerType.VERT)];
-	this.currentPlayer = -1;
+	this.interfaceInit = false;
 
-	this.currentMove = null;
+	this.start = function (w, h, playerOne, playerTwo) {
+
+		BLOCK_SIZE = (this.canvas.width - 100) / w;
+
+		this.board = new Board(w, h);
+
+		this.players = new Array();
+		this.players.push(playerOne);
+		this.players.push(playerTwo);
+
+		this.currentPlayer = -1;
+		this.currentMove = null;
+
+		if (!this.interfaceInit) {
+			this.initInterface();
+			this.interfaceInit = true;
+		}
+
+		this.update();
+
+		var self = this;
+		setTimeout(function () {
+			self.nextTurn();
+		}, 100);
+
+	};
 
 	this.update = function () {
 
@@ -55,6 +78,9 @@ var DomineeringGame = function (w, h, id) {
 
 		var self = this;
 		window.addEventListener('keyup', function (e) {
+
+			if (self.players == null)
+				return;
 
 			var player = self.players[self.currentPlayer];
 
@@ -111,9 +137,5 @@ var DomineeringGame = function (w, h, id) {
 		}, true);
 
 	}
-
-	this.initInterface();
-	this.update();
-	this.nextTurn();
 
 };

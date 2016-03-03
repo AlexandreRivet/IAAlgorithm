@@ -4,7 +4,9 @@
 
 	<title>Domineering</title>
 
+	<link rel="stylesheet" href="libs/jquery-ui-1.11.2/jquery-ui.css">
 	<link rel="stylesheet" href="css/main-style.css">
+
 </head>
 
 <body>
@@ -19,15 +21,26 @@
 
 		<section class="options">
 			<div id="start-stop">
-				<input type="button" id="button" value="START">
+				<input type="button" id="button_start" value="START">
 			</div>
+			<br/>
+			<label for="SizeGrid">Size grid: <span id="SizeGridValue">8</span></label>
+			<div id="SizeGrid"></div>
 			<br/>
 			<label for="TypeOfGame">Game mode: </label>
 			<div id="TypeOfGame" class="radio_area">
 				<input type="radio" name="radio_typeGame" value="0" class="detection_checkbox" checked> IA vs IA
 				<input type="radio" name="radio_typeGame" value="1" class="detection_checkbox"> IA vs Human
-				<input type="radio" name="radio_typeGame" value="2" class="detection_checkbox"> Human vs Human
+				<input type="radio" name="radio_typeGame" value="2" class="detection_checkbox"> Human vs IA
+				<input type="radio" name="radio_typeGame" value="3" class="detection_checkbox"> Human vs Human
 			</div>
+			<br/>
+			<label for="TypeOfFirst">First player: </label>
+			<div id="TypeOfFirst" class="radio_area">
+				<input type="radio" name="radio_typeFirst" value="0" class="detection_checkbox" checked> Horizontal
+				<input type="radio" name="radio_typeFirst" value="1" class="detection_checkbox"> Vertical
+			</div>
+			<br/>
 			<div id="AIType">
 				<label for="AITypeEvaluation">AI Type mode: </label>
 				<div id="AITypeEvaluation" class="radio_area">
@@ -36,7 +49,6 @@
 					<input type="radio" name="radio_typeGame" value="2" class="detection_checkbox"> MinMax AB
 					<input type="radio" name="radio_typeGame" value="3" class="detection_checkbox"> Negamax AB
 				</div>
-
 			</div>
 			<!--<label for="NumBoids">Boids: <span id="NumBoidsValue">20</span></label>
 			<div id="NumBoids"></div>
@@ -71,6 +83,10 @@
 		</section>
 	</section>
 </body>
+
+<script src="libs/jquery-1.11.2.min.js"></script>
+<script src="libs/jquery-ui-1.11.2/jquery-ui.js"></script>
+
 <script src="js/Domineering/Board.js"></script>
 <script src="js/Domineering/Move.js."></script>
 <script src="js/Domineering/Player.js"></script>
