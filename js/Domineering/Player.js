@@ -161,11 +161,11 @@ IA.prototype.evaluate = function (board, current) {
 
 	if (current) {
 
-		this.toggleType();
 		var myPossibilities = this.getNumPossibilities(board.board);
 
 		this.toggleType();
 		var otherPossibilities = this.getNumPossibilities(board.board);
+		this.toggleType();
 
 	} else {
 
