@@ -41,4 +41,10 @@ var Move = function (row, col, vertical) {
 
 	};
 
+	this.getCode = function () {
+
+		return row + ':' + col + ':' + ((vertical) ? '1' : '0');
+
+	};
+
 };

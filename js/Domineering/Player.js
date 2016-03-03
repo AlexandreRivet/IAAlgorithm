@@ -8,7 +8,11 @@ var IAMethod = {
 	MinMax_AB: 1,
 	Negamax: 2,
 	Negamax_AB: 3,
-	Negamax_AB_Time: 4
+	Negamax_AB_Time: 4,
+	Negamax_AB_Killer: 5,
+	Negamax_AB_Killer_withTime: 6,
+	Negamax_AB_Historic: 7,
+	Negamax_AB_Historic_withTime: 8
 };
 
 
@@ -152,6 +156,9 @@ var IA = function (mode) {
 	this.initialDepth = 3;
 	this.currentDepth = 1;
 
+	this.killer = [null, null, null];
+	this.history = [];
+
 };
 IA.prototype = Object.create(Player.prototype);
 
@@ -186,6 +193,9 @@ IA.prototype.evaluate = function (board, current) {
 
 };
 
+/*********************************************************************************************
+PLAY BEST MOVE
+*********************************************************************************************/
 IA.prototype.playBestMove = function (board) {
 
 	var bestMove = {
@@ -223,14 +233,34 @@ IA.prototype.playBestMove = function (board) {
 			}
 		}
 		break;
+	case IAMethod.Negamax_AB_Killer:
+		this.negamax_alphaBeta_killer(this.initialDepth, -50000, 50000, board, bestMove);
+
+		this.killer = [null, null, null];
+		break;
+	case IAMethod.Negamax_AB_Historic:
+
+		// Reset du tableau
+		var board_tmp = new Board(board.w, board.h);
+		var posA = this.getHoriPossibilities(board_tmp.board);
+		var posB = this.getVertPossibilities(board_tmp.board);
+		for (var element in posA) this.history[posA[element].getCode()] = 0;
+		for (var element in posB) this.history[posB[element].getCode()] = 0;
+
+		this.negamax_alphaBeta_historic(this.initialDepth, -50000, 50000, board, bestMove);
+
+		this.history = [];
+		break;
 	}
 
-	console.log(bestMove.move);
+
 
 	this.play(board, bestMove.move);
 };
 
-
+/*********************************************************************************************
+MAX
+*********************************************************************************************/
 IA.prototype.max = function (depth, board, bestMove) {
 
 	if (depth == 0)
@@ -268,6 +298,9 @@ IA.prototype.max = function (depth, board, bestMove) {
 
 };
 
+/*********************************************************************************************
+MIN
+*********************************************************************************************/
 IA.prototype.min = function (depth, board, bestMove) {
 
 	if (depth == 0)
@@ -304,6 +337,10 @@ IA.prototype.min = function (depth, board, bestMove) {
 	return eval;
 
 };
+
+/*********************************************************************************************
+MAX ALPHA BETA
+*********************************************************************************************/
 IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 	if (depth == 0)
@@ -345,6 +382,9 @@ IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 	return alpha;
 }
 
+/*********************************************************************************************
+MIN ALPHA BETA
+*********************************************************************************************/
 IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 	if (depth == 0)
@@ -386,6 +426,9 @@ IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 	return beta;
 }
 
+/*********************************************************************************************
+NEGAMAX
+*********************************************************************************************/
 IA.prototype.negamax = function (depth, board, bestMove) {
 
 	if (depth == 0)
@@ -422,6 +465,10 @@ IA.prototype.negamax = function (depth, board, bestMove) {
 
 	return eval;
 }
+
+/*********************************************************************************************
+NEGAMAX ALPHA BETA
+*********************************************************************************************/
 IA.prototype.negamax_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 	if (depth == 0)
@@ -466,6 +513,121 @@ IA.prototype.negamax_alphaBeta = function (depth, alpha, beta, board, bestMove) 
 	return alpha;
 }
 
+
+/*********************************************************************************************
+NEGAMAX ALPHA BETA KILLER
+*********************************************************************************************/
+IA.prototype.negamax_alphaBeta_killer = function (depth, alpha, beta, board, bestMove) {
+
+	if (depth == 0)
+		return this.evaluate(board, true);
+
+	var possibilities = this.getPossibilities(board.board, true);
+
+	if (possibilities.length == 0)
+		return -49999;
+
+	if (board.valid(this.killer[this.initialDepth - depth]))
+		possibilities.splice(0, 0, this.killer[this.initialDepth - depth]);
+
+	this.toggleType();
+
+	for (var p in possibilities) {
+
+		var move = possibilities[p];
+
+		this.play(board, move);
+
+		var e = -this.negamax_alphaBeta_killer(depth - 1, -beta, -alpha, board, bestMove);
+
+		this.undo(board);
+
+		if (e > alpha) {
+			alpha = e;
+
+			if (depth == this.initialDepth)
+				bestMove.move = move;
+
+			if (alpha >= beta) {
+
+				this.killer[this.initialDepth - depth] = move;
+				this.toggleType();
+				return beta;
+
+			}
+		}
+
+
+	}
+
+	this.toggleType();
+
+	return alpha;
+
+};
+
+/*********************************************************************************************
+NEGAMAX ALPHA BETA HISTORIC
+*********************************************************************************************/
+IA.prototype.negamax_alphaBeta_historic = function (depth, alpha, beta, board, bestMove) {
+
+	if (depth == 0)
+		return this.evaluate(board, true);
+
+	var possibilities = this.getPossibilities(board.board, true);
+
+	if (possibilities.length == 0)
+		return -49999;
+
+	var self = this;
+	possibilities.sort(function (a, b) {
+
+		var elementA = self.history[a.getCode()];
+		var elementB = self.history[b.getCode()];
+
+		return elementB - elementA;
+
+	});
+
+	this.toggleType();
+
+	for (var p in possibilities) {
+
+		var move = possibilities[p];
+
+		this.play(board, move);
+
+		var e = -this.negamax_alphaBeta_historic(depth - 1, -beta, -alpha, board, bestMove);
+
+		this.undo(board);
+
+		if (e > alpha) {
+			alpha = e;
+
+			if (depth == this.initialDepth)
+				bestMove.move = move;
+
+			if (alpha >= beta) {
+
+				this.history[move.getCode()] += Math.pow(4, depth);
+				this.toggleType();
+				return beta;
+
+			}
+		}
+
+
+	}
+
+	this.toggleType();
+
+	return alpha;
+
+};
+
+/*********************************************************************************************
+NEGAMAX ALPHA BETA APPRO.
+*********************************************************************************************/
 IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, bestMove) {
 
 	if (TIME.timeIsUp())
@@ -492,7 +654,6 @@ IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, b
 			this.toggleType();
 			return 0;
 		}
-
 
 		var move = possibilities[p];
 
@@ -527,3 +688,150 @@ IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, b
 
 	return alpha;
 }
+
+/*********************************************************************************************
+NEGAMAX ALPHA BETA KILLER APPRO.
+*********************************************************************************************/
+IA.prototype.negamax_alphaBeta_killer_withTime = function (depth, alpha, beta, board, bestMove) {
+
+	if (TIME.timeIsUp())
+		return 0;
+
+	if (depth == 0)
+		return this.evaluate(board, true);
+
+	var possibilities = this.getPossibilities(board.board, true);
+
+	if (possibilities.length == 0)
+		return -49999;
+
+	if (board.valid(this.killer[this.initialDepth - depth]))
+		possibilities.splice(0, 0, this.killer[this.initialDepth - depth]);
+
+	this.toggleType();
+
+	if (TIME.timeIsUp()) {
+		this.toggleType();
+		return 0;
+	}
+
+	for (var p in possibilities) {
+
+		if (TIME.timeIsUp()) {
+			this.toggleType();
+			return 0;
+		}
+
+		var move = possibilities[p];
+
+		this.play(board, move);
+
+		var e = -this.negamax_alphaBeta_killer_withTime(depth - 1, -beta, -alpha, board, bestMove);
+
+		this.undo(board);
+
+		if (TIME.timeIsUp()) {
+			this.toggleType();
+			return 0;
+		}
+
+		if (e > alpha) {
+			alpha = e;
+
+			if (depth == this.initialDepth)
+				bestMove.move = move;
+
+			if (alpha >= beta) {
+
+				this.killer[this.initialDepth - depth] = move;
+				this.toggleType();
+				return beta;
+
+			}
+		}
+
+
+	}
+
+	this.toggleType();
+
+	return alpha;
+
+};
+
+/*********************************************************************************************
+NEGAMAX ALPHA BETA HISTORIC APPRO.
+*********************************************************************************************/
+IA.prototype.negamax_alphaBeta_historic_withTime = function (depth, alpha, beta, board, bestMove) {
+
+	if (TIME.timeIsUp())
+		return 0;
+
+	if (depth == 0)
+		return this.evaluate(board, true);
+
+	var possibilities = this.getPossibilities(board.board, true);
+
+	if (possibilities.length == 0)
+		return -49999;
+
+	var self = this;
+	possibilities.sort(function (a, b) {
+
+		var elementA = self.history[a.getCode()];
+		var elementB = self.history[b.getCode()];
+
+		return elementB - elementA;
+
+	});
+
+	this.toggleType();
+
+	if (TIME.timeIsUp()) {
+		this.toggleType();
+		return 0;
+	}
+
+	for (var p in possibilities) {
+
+		if (TIME.timeIsUp()) {
+			this.toggleType();
+			return 0;
+		}
+
+		var move = possibilities[p];
+
+		this.play(board, move);
+
+		var e = -this.negamax_alphaBeta_historic_withTime(depth - 1, -beta, -alpha, board, bestMove);
+
+		this.undo(board);
+
+		if (TIME.timeIsUp()) {
+			this.toggleType();
+			return 0;
+		}
+
+		if (e > alpha) {
+			alpha = e;
+
+			if (depth == this.initialDepth)
+				bestMove.move = move;
+
+			if (alpha >= beta) {
+
+				this.history[move.getCode()] += Math.pow(4, depth);
+				this.toggleType();
+				return beta;
+
+			}
+		}
+
+
+	}
+
+	this.toggleType();
+
+	return alpha;
+
+};

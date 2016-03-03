@@ -2,7 +2,7 @@ var DOMINEERING = null;
 var SIZE = 8;
 var GAME_MODE = 0;
 var FIRST_PLAYER_TYPE = PlayerType.HORI;
-var IAMETHOD = 0;
+var IAMETHOD = IAMethod.Negamax_AB_Killer;
 
 function init() {
 

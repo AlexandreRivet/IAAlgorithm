@@ -37,7 +37,7 @@ var Board = function (w, h) {
 		var movesDisplayed = 15;
 		var start = (this.moves.length < movesDisplayed) ? 0 : this.moves.length - movesDisplayed;
 		var j = 0;
-		ctx.font = '12pt Arial';
+		ctx.font = '11pt Arial';
 		for (var i = start; i < this.moves.length; i++) {
 
 			var move = this.moves[i];
@@ -66,6 +66,9 @@ var Board = function (w, h) {
 	};
 
 	this.valid = function (move) {
+
+		if (move == null || undefined)
+			return false;
 
 		var blocks = move.blocks();
 
