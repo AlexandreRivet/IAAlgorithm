@@ -166,12 +166,30 @@ IA.prototype.playBestMove = function (board) {
 		move: null,
 		eval: 0
 	};
-
+    var tmp = {
+		move: null,
+		eval: 0
+	};;
     // this.max(this.depth, board, bestMove);
     // this.max_alphaBeta(this.depth, -50000, 50000, board, bestMove);
     // this.negamax(this.depth, board, bestMove);
-	this.negamax_alphaBeta(this.depth, -50000, 50000, board, bestMove);
-
+	//this.negamax_alphaBeta(this.depth, -50000, 50000, board, bestMove);
+    this.depth = 1;
+    while(true)
+    { 
+        this.negamax_alphaBeta_withTime(this.depth, -50000, 50000, board, tmp);
+        
+        if(!TIME.timeIsUp()) 
+        {
+            this.depth++;
+            bestMove.move = tmp.move;
+        }
+        else
+        {
+            break;
+        }
+    }
+    
 	// console.log((new Date().getTime() - start) + 'ms.');
 
 	this.play(board, bestMove.move);
@@ -390,6 +408,71 @@ IA.prototype.negamax_alphaBeta = function (depth, alpha, beta, board, bestMove){
 
 		this.undo(board);
 
+		if (e > alpha) {
+			alpha = e;
+			
+			if (depth == this.depth)
+                bestMove.move = move;
+            
+			if (alpha >= beta) {
+				
+               this.toggleType();
+	           return beta;
+				
+		   }
+		}
+        
+
+	}
+
+	this.toggleType();
+
+	return alpha;
+}
+IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, bestMove){
+    
+    if(TIME.timeIsUp())
+        return 0;
+    
+    if (depth == 0)
+		return this.evaluate(board);
+
+    var possibilities = this.getPossibilities(board.board, true);
+
+	if (possibilities.length == 0)
+		return -49999;
+
+	this.toggleType();
+	
+    if(TIME.timeIsUp())
+        {
+            this.toggleType();
+            return 0;
+        }
+    
+    for (var p in possibilities) {
+
+        if(TIME.timeIsUp())
+        {
+            this.toggleType();
+            return 0;
+        }
+            
+        
+		var move = possibilities[p];
+
+		this.play(board, move);
+
+		var e = - this.negamax_alphaBeta(depth - 1, -beta, -alpha, board, bestMove);
+        
+		this.undo(board);
+        
+        if(TIME.timeIsUp())
+        {
+            this.toggleType();
+            return 0;
+        }
+        
 		if (e > alpha) {
 			alpha = e;
 			

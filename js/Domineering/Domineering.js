@@ -34,7 +34,7 @@ var DomineeringGame = function (w, h, id) {
 			console.log('Je ne peux plus jouer');
 			return;
 		}
-
+        TIME.start(500.0);
 		if (player instanceof IA) {
 			player.playBestMove(this.board);
 			this.update();
