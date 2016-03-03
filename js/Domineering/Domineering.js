@@ -60,7 +60,7 @@ var DomineeringGame = function (id) {
 
 		if (!player.canPlay(this.board.board)) {
 
-			var playerMode = (player instanceof IA) ? 'L\'IA' : 'L\Human';
+			var playerMode = (player instanceof IA) ? 'L\'IA' : 'L\'Human';
 			var playerType = (player.initialType == PlayerType.HORI) ? 'Hori' : 'Vert';
 
 			alert(playerMode + ' jouant en ' + playerType + ' a perdu.');
@@ -78,7 +78,7 @@ var DomineeringGame = function (id) {
 			}, 100);
 
 		} else if (player instanceof Human) {
-			this.currentMove = new Move(0, 0, player.type);
+			this.currentMove = new Move(0, 0, player.initialType);
 			this.update();
 		}
 
