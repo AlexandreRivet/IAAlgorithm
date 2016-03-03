@@ -1,3 +1,6 @@
+var START_TURN = null;
+var TIME_TURN = null;
+
 var DomineeringGame = function (id) {
 
 	this.canvas = document.getElementById(id);
@@ -14,6 +17,7 @@ var DomineeringGame = function (id) {
 		if (this.timeoutID != null)
 			clearTimeout(this.timeoutID);
 
+		TIME_TURN = null;
 		BLOCK_SIZE = (this.canvas.width - 100) / w;
 
 		this.board = new Board(w, h);
@@ -60,16 +64,21 @@ var DomineeringGame = function (id) {
 
 		if (!player.canPlay(this.board.board)) {
 
-			var playerMode = (player instanceof IA) ? 'L\'IA' : 'L\'Human';
-			var playerType = (player.initialType == PlayerType.HORI) ? 'Hori' : 'Vert';
+			var playerMode = (player instanceof IA) ? 'AI' : 'L\'Human';
+			var playerType = (player.initialType == PlayerType.HORI) ? 'horizontal' : 'vertical';
 
-			alert(playerMode + ' jouant en ' + playerType + ' a perdu.');
+			alert(playerMode + ' playing in ' + playerType + ' loses the game.');
 
 			return;
 		}
-		TIME.start(500.0);
+		
+		START_TURN = new Date().getTime();
+		
 		if (player instanceof IA) {
 			player.playBestMove(this.board);
+			
+			TIME_TURN = new Date().getTime() - START_TURN;
+			
 			this.update();
 
 			var self = this;
@@ -78,7 +87,7 @@ var DomineeringGame = function (id) {
 			}, 100);
 
 		} else if (player instanceof Human) {
-			this.currentMove = new Move(0, 0, player.initialType);
+			this.currentMove = new Move(0, 0, player.initialType);			
 			this.update();
 		}
 
@@ -108,6 +117,8 @@ var DomineeringGame = function (id) {
 
 					self.board.move(self.currentMove);
 
+					TIME_TURN = new Date().getTime() - START_TURN;
+					
 					self.currentMove = null;
 					self.update();
 

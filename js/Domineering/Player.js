@@ -156,6 +156,7 @@ var IA = function (mode) {
 	this.initialDepth = 3;
 	this.currentDepth = 1;
 
+	this.timeAllowedToPlay = 2000.0;			// en ms
 	this.killer = [null, null, null];
 	this.history = [];
 
@@ -217,6 +218,9 @@ IA.prototype.playBestMove = function (board) {
 		this.negamax_alphaBeta(this.initialDepth, -50000, 50000, board, bestMove);
 		break;
 	case IAMethod.Negamax_AB_Time:
+			
+		TIME.start(this.timeAllowedToPlay);
+		
 		var tmp = {
 			move: null,
 			eval: 0
@@ -238,6 +242,28 @@ IA.prototype.playBestMove = function (board) {
 
 		this.killer = [null, null, null];
 		break;
+	case IAMethod.Negamax_AB_Killer_withTime:
+		
+		TIME.start(this.timeAllowedToPlay);
+			
+		var tmp = {
+			move: null,
+			eval: 0
+		};
+		this.currentDepth = 1;
+		while (true) {
+			this.negamax_alphaBeta_killer_withTime(this.currentDepth, -50000, 50000, board, tmp);
+
+			if (!TIME.timeIsUp()) {
+				this.currentDepth++;
+				bestMove.move = tmp.move;
+			} else {
+				break;
+			}
+		}
+
+		this.killer = [null, null, null];
+		break;
 	case IAMethod.Negamax_AB_Historic:
 
 		// Reset du tableau
@@ -247,13 +273,27 @@ IA.prototype.playBestMove = function (board) {
 		for (var element in posA) this.history[posA[element].getCode()] = 0;
 		for (var element in posB) this.history[posB[element].getCode()] = 0;
 
-		this.negamax_alphaBeta_historic(this.initialDepth, -50000, 50000, board, bestMove);
+		TIME.start(this.timeAllowedToPlay);
+			
+		var tmp = {
+			move: null,
+			eval: 0
+		};
+		this.currentDepth = 1;
+		while (true) {
+			this.negamax_alphaBeta_historic_withTime(this.currentDepth, -50000, 50000, board, tmp);
+
+			if (!TIME.timeIsUp()) {
+				this.currentDepth++;
+				bestMove.move = tmp.move;
+			} else {
+				break;
+			}
+		}
 
 		this.history = [];
 		break;
 	}
-
-
 
 	this.play(board, bestMove.move);
 };
@@ -659,7 +699,7 @@ IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, b
 
 		this.play(board, move);
 
-		var e = -this.negamax_alphaBeta(depth - 1, -beta, -alpha, board, bestMove);
+		var e = -this.negamax_alphaBeta_withTime(depth - 1, -beta, -alpha, board, bestMove);
 
 		this.undo(board);
 
@@ -738,7 +778,7 @@ IA.prototype.negamax_alphaBeta_killer_withTime = function (depth, alpha, beta, b
 		if (e > alpha) {
 			alpha = e;
 
-			if (depth == this.initialDepth)
+			if (depth == this.currentDepth)
 				bestMove.move = move;
 
 			if (alpha >= beta) {
@@ -815,7 +855,7 @@ IA.prototype.negamax_alphaBeta_historic_withTime = function (depth, alpha, beta,
 		if (e > alpha) {
 			alpha = e;
 
-			if (depth == this.initialDepth)
+			if (depth == this.currentDepth)
 				bestMove.move = move;
 
 			if (alpha >= beta) {

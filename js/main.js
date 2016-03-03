@@ -2,7 +2,9 @@ var DOMINEERING = null;
 var SIZE = 8;
 var GAME_MODE = 0;
 var FIRST_PLAYER_TYPE = PlayerType.HORI;
-var IAMETHOD = IAMethod.Negamax_AB_Killer;
+var IAMETHOD = IAMethod.MinMax;
+var DEPTH = 3;
+var TIME_ALLOWED = 500;
 
 function init() {
 
@@ -15,6 +17,26 @@ function init() {
 			$('#SizeGridValue').html(SIZE);
 		}
 	});
+	
+	$("#Depth").slider({
+		min: 1,
+		max: 6,
+		value: DEPTH,
+		slide: function (event, ui) {
+			DEPTH = ui.value;
+			$('#DepthValue').html(DEPTH);
+		}
+	});
+	
+	$("#TimeAllowed").slider({
+		min: 200,
+		max: 2000,
+		value: TIME_ALLOWED,
+		slide: function (event, ui) {
+			TIME_ALLOWED = ui.value;
+			$('#TimeAllowedValue').html(TIME_ALLOWED);
+		}
+	});
 
 	$("#button_start").click(function (e) {
 		startDomineering();
@@ -22,6 +44,16 @@ function init() {
 
 	$("#TypeOfGame input").change(function () {
 		GAME_MODE = parseInt($('input[name=radio_typeGame]:checked', "#TypeOfGame").val());
+		
+		if (GAME_MODE != 3) {
+		
+			$('#AIType').show();
+			
+		} else {
+			
+			$('#AIType').hide();
+			
+		}
 	});
 
 	$("#TypeOfFirst input").change(function () {
@@ -30,11 +62,25 @@ function init() {
 
 	$("#AITypeEvaluation input").change(function () {
 		IAMETHOD = parseInt($('input[name=radio_AIType]:checked', "#AITypeEvaluation").val());
+		
+		if (IAMETHOD == IAMethod.Negamax_AB_Time ||
+			IAMETHOD == IAMethod.Negamax_AB_Historic_withTime || 
+			IAMETHOD == IAMethod.Negamax_AB_Killer_withTime) {
+			
+			$('#AIDepth').hide();
+			$('#AITimeAllowed').show();
+			
+		}
+		else {
+			
+			$('#AITimeAllowed').hide();
+			$('#AIDepth').show();
+			
+			
+		}
 	});
 
 	DOMINEERING = new DomineeringGame('domineering-game');
-
-	// On ajoute toutes les actions possibles
 
 }
 
@@ -74,11 +120,21 @@ function startDomineering() {
 
 	// Mise à jour des infos supplémentaires
 
-	if (playerOne instanceof IA)
-		playerOne.method = IAMETHOD;
-
-	if (playerTwo instanceof IA)
-		playerTwo.method = IAMETHOD;
+	var setPlayer = function(player) {
+	
+		if (player instanceof IA) {
+		
+			player.method = IAMETHOD;
+			player.initialDepth = DEPTH;
+			player.timeAllowedToPlay = TIME_ALLOWED;
+			
+		}
+			
+		
+	};
+	
+	setPlayer(playerOne);
+	setPlayer(playerTwo);
 
 	DOMINEERING.start(size, size, playerOne, playerTwo);
 

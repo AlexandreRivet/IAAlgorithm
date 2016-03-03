@@ -40,7 +40,7 @@
 				<input type="radio" name="radio_typeFirst" value="0" class="detection_checkbox" checked> Horizontal
 				<input type="radio" name="radio_typeFirst" value="1" class="detection_checkbox"> Vertical
 			</div>
-			<br/>
+			<br/><br/><br/>
 			<div id="AIType">
 				<label for="AITypeEvaluation">AI Type mode: </label>
 				<div id="AITypeEvaluation" class="radio_area">
@@ -48,9 +48,23 @@
 					<input type="radio" name="radio_AIType" value="1" class="detection_checkbox"> MinMax AB
 					<input type="radio" name="radio_AIType" value="2" class="detection_checkbox"> Negamax
 					<input type="radio" name="radio_AIType" value="3" class="detection_checkbox"> Negamax AB
-					<input type="radio" name="radio_AIType" value="4" class="detection_checkbox"> Approfondissement Ite.
-					<input type="radio" name="radio_AIType" value="5" class="detection_checkbox"> Negamax Killer
-					<input type="radio" name="radio_AIType" value="6" class="detection_checkbox"> Negamax History
+					<input type="radio" name="radio_AIType" value="4" class="detection_checkbox"> Negamax AB Ite.
+					<input type="radio" name="radio_AIType" value="5" class="detection_checkbox"> Negamax AB Killer
+					<input type="radio" name="radio_AIType" value="6" class="detection_checkbox"> Negamax AB Killer Ite.
+					<input type="radio" name="radio_AIType" value="7" class="detection_checkbox"> Negamax AB History
+					<input type="radio" name="radio_AIType" value="8" class="detection_checkbox"> Negamax AB History Ite.
+				</div>
+				<br/><br/>
+				<div id="AIDepth">
+					<label for="Depth">Depth: <span id="DepthValue">3</span></label>
+					<div id="Depth"></div>
+					<br/><br/>
+				</div>				
+				
+				<div id="AITimeAllowed">
+					<label for="TimeAllowed">Time Allowed: <span id="TimeAllowedValue">500</span></label>
+					<div id="TimeAllowed"></div>
+					<br/><br/>
 				</div>
 			</div>
 		</section>

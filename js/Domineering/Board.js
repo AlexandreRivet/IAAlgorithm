@@ -46,6 +46,16 @@ var Board = function (w, h) {
 			j++;
 
 		}
+		
+		// Dessin du temps du tour
+		if (TIME_TURN != null) {
+			
+			var str = 'Turn duration: ' + TIME_TURN + 'ms';
+			var widthText = ctx.measureText(str).width;
+			
+			ctx.fillStyle = 'black';
+			ctx.fillText(str,  (this.w * BLOCK_SIZE) / 2 + 50 - widthText / 2, this.h * BLOCK_SIZE + 75);
+		}
 
 	};
 
