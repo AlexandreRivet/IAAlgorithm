@@ -149,20 +149,37 @@ var IA = function (mode) {
 	Player.call(this, mode);
 
 	this.method = IAMethod.MinMax;
-	this.depth = 3;
+	this.depth = 2;
 
 };
 IA.prototype = Object.create(Player.prototype);
 
-IA.prototype.evaluate = function (board) {
+IA.prototype.evaluate = function (board, current) {
 
-	this.toggleType();
-	var myPossibilities = this.getNumPossibilities(board.board);
+	if (!current)
+		current = false;
 
-	this.toggleType();
-	var otherPossibilities = this.getNumPossibilities(board.board);
+	if (current) {
 
-	// this.toggleType();
+		this.toggleType();
+		var myPossibilities = this.getNumPossibilities(board.board);
+
+		this.toggleType();
+		var otherPossibilities = this.getNumPossibilities(board.board);
+
+	} else {
+
+		var oldType = this.currentType;
+
+		this.currentType = this.initialType;
+		var myPossibilities = this.getNumPossibilities(board.board);
+
+		this.toggleType();
+		var otherPossibilities = this.getNumPossibilities(board.board);
+
+		this.currentType = oldType;
+
+	}
 
 	return myPossibilities - otherPossibilities;
 
@@ -214,7 +231,7 @@ IA.prototype.playBestMove = function (board) {
 IA.prototype.max = function (depth, board, bestMove) {
 
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, false);
 
 	var eval = -50000;
 	var possibilities = this.getPossibilities(board.board, true);
@@ -251,7 +268,7 @@ IA.prototype.max = function (depth, board, bestMove) {
 IA.prototype.min = function (depth, board, bestMove) {
 
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, false);
 
 	var eval = 50000;
 	var possibilities = this.getPossibilities(board.board, true);
@@ -287,7 +304,7 @@ IA.prototype.min = function (depth, board, bestMove) {
 IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, false);
 
 	var possibilities = this.getPossibilities(board.board, true);
 
@@ -297,7 +314,6 @@ IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 	this.toggleType();
 
 	for (var p in possibilities) {
-
 
 		var move = possibilities[p];
 
@@ -309,14 +325,15 @@ IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 		if (e > alpha) {
 			alpha = e;
+
 			if (depth == this.depth)
 				bestMove.move = move;
+
 			if (alpha >= beta) {
 				this.toggleType();
 				return beta;
 			}
 		}
-
 
 	}
 
@@ -326,8 +343,9 @@ IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 }
 
 IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
+
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, false);
 
 	var possibilities = this.getPossibilities(board.board, true);
 
@@ -348,8 +366,10 @@ IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 		if (e < beta) {
 			beta = e;
+
 			if (depth == this.depth)
 				bestMove.move = move;
+
 			if (alpha >= beta) {
 				this.toggleType();
 				return alpha;
@@ -367,7 +387,7 @@ IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 IA.prototype.negamax = function (depth, board, bestMove) {
 
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, true);
 
 	var eval = -50000;
 	var possibilities = this.getPossibilities(board.board, true);
@@ -403,7 +423,7 @@ IA.prototype.negamax = function (depth, board, bestMove) {
 IA.prototype.negamax_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, true);
 
 	var possibilities = this.getPossibilities(board.board, true);
 
@@ -449,7 +469,7 @@ IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, b
 		return 0;
 
 	if (depth == 0)
-		return this.evaluate(board);
+		return this.evaluate(board, true);
 
 	var possibilities = this.getPossibilities(board.board, true);
 
