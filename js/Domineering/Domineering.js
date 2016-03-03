@@ -7,7 +7,12 @@ var DomineeringGame = function (id) {
 
 	this.interfaceInit = false;
 
+	this.timeoutID = null;
+
 	this.start = function (w, h, playerOne, playerTwo) {
+
+		if (this.timeoutID != null)
+			clearTimeout(this.timeoutID);
 
 		BLOCK_SIZE = (this.canvas.width - 100) / w;
 
@@ -28,7 +33,7 @@ var DomineeringGame = function (id) {
 		this.update();
 
 		var self = this;
-		setTimeout(function () {
+		self.timeoutID = setTimeout(function () {
 			self.nextTurn();
 		}, 100);
 
@@ -57,13 +62,13 @@ var DomineeringGame = function (id) {
 			console.log('Je ne peux plus jouer');
 			return;
 		}
-        TIME.start(500.0);
+		TIME.start(500.0);
 		if (player instanceof IA) {
 			player.playBestMove(this.board);
 			this.update();
 
 			var self = this;
-			setTimeout(function () {
+			self.timeoutID = setTimeout(function () {
 				self.nextTurn();
 			}, 100);
 
@@ -101,7 +106,7 @@ var DomineeringGame = function (id) {
 					self.currentMove = null;
 					self.update();
 
-					setTimeout(function () {
+					self.timeoutID = setTimeout(function () {
 						self.nextTurn();
 					}, 100);
 

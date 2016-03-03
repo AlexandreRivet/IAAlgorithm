@@ -2,6 +2,7 @@ var DOMINEERING = null;
 var SIZE = 8;
 var GAME_MODE = 0;
 var FIRST_PLAYER_TYPE = PlayerType.HORI;
+var IAMETHOD = 0;
 
 function init() {
 
@@ -25,6 +26,10 @@ function init() {
 
 	$("#TypeOfFirst input").change(function () {
 		FIRST_PLAYER_TYPE = parseInt($('input[name=radio_typeFirst]:checked', "#TypeOfFirst").val());
+	});
+
+	$("#AITypeEvaluation input").change(function () {
+		IAMETHOD = parseInt($('input[name=radio_AIType]:checked', "#AITypeEvaluation").val());
 	});
 
 	DOMINEERING = new DomineeringGame('domineering-game');
@@ -69,6 +74,11 @@ function startDomineering() {
 
 	// Mise à jour des infos supplémentaires
 
+	if (playerOne instanceof IA)
+		playerOne.method = IAMETHOD;
+
+	if (playerTwo instanceof IA)
+		playerTwo.method = IAMETHOD;
 
 	DOMINEERING.start(size, size, playerOne, playerTwo);
 

@@ -37,11 +37,12 @@ var Board = function (w, h) {
 		var movesDisplayed = 15;
 		var start = (this.moves.length < movesDisplayed) ? 0 : this.moves.length - movesDisplayed;
 		var j = 0;
+		ctx.font = '12pt Arial';
 		for (var i = start; i < this.moves.length; i++) {
 
 			var move = this.moves[i];
 			ctx.fillStyle = (move.vertical) ? 'white' : 'black';
-			ctx.fillText('[' + move.row + ',' + move.col + ']', 50 + this.w * BLOCK_SIZE + 25, 50 + j * 20);
+			ctx.fillText('[' + move.row + ',' + move.col + ']', 50 + this.w * BLOCK_SIZE + 15, 50 + j * 30);
 			j++;
 
 		}
