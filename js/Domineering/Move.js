@@ -30,12 +30,12 @@ var Move = function (row, col, vertical) {
 		if (outline) {
 
 			ctx.strokeStyle = 'red';
-			ctx.strokeRect(this.col * BLOCK_SIZE + 2, this.row * BLOCK_SIZE + 2, w - 4, h - 4);
+			ctx.strokeRect(this.col * BLOCK_SIZE + 52, this.row * BLOCK_SIZE + 52, w - 4, h - 4);
 
 		} else {
 
-			ctx.fillStyle = 'gray';
-			ctx.fillRect(this.col * BLOCK_SIZE + 1, this.row * BLOCK_SIZE + 1, w - 2, h - 2);
+			ctx.fillStyle = (this.vertical) ? 'white' : 'black';
+			ctx.fillRect(this.col * BLOCK_SIZE + 51, this.row * BLOCK_SIZE + 51, w - 2, h - 2);
 
 		}
 
