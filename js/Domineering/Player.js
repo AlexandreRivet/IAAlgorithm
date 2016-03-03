@@ -149,7 +149,8 @@ var IA = function (mode) {
 	Player.call(this, mode);
 
 	this.method = IAMethod.MinMax;
-	this.depth = 1;
+	this.initialDepth = 3;
+	this.currentDepth = 1;
 
 };
 IA.prototype = Object.create(Player.prototype);
@@ -194,28 +195,28 @@ IA.prototype.playBestMove = function (board) {
 
 	switch (this.method) {
 	case IAMethod.MinMax:
-		this.max(this.depth, board, bestMove);
+		this.max(this.initialDepth, board, bestMove);
 		break;
 	case IAMethod.MinMax_AB:
-		this.max_alphaBeta(this.depth, -50000, 50000, board, bestMove);
+		this.max_alphaBeta(this.initialDepth, -50000, 50000, board, bestMove);
 		break;
 	case IAMethod.Negamax:
-		this.negamax(this.depth, board, bestMove);
+		this.negamax(this.initialDepth, board, bestMove);
 		break;
 	case IAMethod.Negamax_AB:
-		this.negamax_alphaBeta(this.depth, -50000, 50000, board, bestMove);
+		this.negamax_alphaBeta(this.initialDepth, -50000, 50000, board, bestMove);
 		break;
 	case IAMethod.Negamax_AB_Time:
 		var tmp = {
 			move: null,
 			eval: 0
 		};
-		var depth = 1;
+		this.currentDepth = 1;
 		while (true) {
-			this.negamax_alphaBeta_withTime(depth, -50000, 50000, board, tmp);
+			this.negamax_alphaBeta_withTime(this.currentDepth, -50000, 50000, board, tmp);
 
 			if (!TIME.timeIsUp()) {
-				depth++;
+				this.currentDepth++;
 				bestMove.move = tmp.move;
 			} else {
 				break;
@@ -223,6 +224,8 @@ IA.prototype.playBestMove = function (board) {
 		}
 		break;
 	}
+
+	console.log(bestMove.move);
 
 	this.play(board, bestMove.move);
 };
@@ -253,7 +256,7 @@ IA.prototype.max = function (depth, board, bestMove) {
 
 		if (e > eval) {
 			eval = e;
-			if (depth == this.depth)
+			if (depth == this.initialDepth)
 				bestMove.move = move;
 		}
 
@@ -290,7 +293,7 @@ IA.prototype.min = function (depth, board, bestMove) {
 
 		if (e < eval) {
 			eval = e;
-			if (depth == this.depth)
+			if (depth == this.initialDepth)
 				bestMove.move = move;
 		}
 
@@ -326,7 +329,7 @@ IA.prototype.max_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 		if (e > alpha) {
 			alpha = e;
 
-			if (depth == this.depth)
+			if (depth == this.initialDepth)
 				bestMove.move = move;
 
 			if (alpha >= beta) {
@@ -367,7 +370,7 @@ IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 		if (e < beta) {
 			beta = e;
 
-			if (depth == this.depth)
+			if (depth == this.initialDepth)
 				bestMove.move = move;
 
 			if (alpha >= beta) {
@@ -409,7 +412,7 @@ IA.prototype.negamax = function (depth, board, bestMove) {
 		if (e > eval) {
 			eval = e;
 
-			if (depth == this.depth)
+			if (depth == this.initialDepth)
 				bestMove.move = move;
 		}
 
@@ -444,7 +447,7 @@ IA.prototype.negamax_alphaBeta = function (depth, alpha, beta, board, bestMove) 
 		if (e > alpha) {
 			alpha = e;
 
-			if (depth == this.depth)
+			if (depth == this.initialDepth)
 				bestMove.move = move;
 
 			if (alpha >= beta) {
@@ -462,6 +465,7 @@ IA.prototype.negamax_alphaBeta = function (depth, alpha, beta, board, bestMove) 
 
 	return alpha;
 }
+
 IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, bestMove) {
 
 	if (TIME.timeIsUp())
@@ -506,7 +510,7 @@ IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, b
 		if (e > alpha) {
 			alpha = e;
 
-			if (depth == this.depth)
+			if (depth == this.currentDepth)
 				bestMove.move = move;
 
 			if (alpha >= beta) {
@@ -516,7 +520,6 @@ IA.prototype.negamax_alphaBeta_withTime = function (depth, alpha, beta, board, b
 
 			}
 		}
-
 
 	}
 
