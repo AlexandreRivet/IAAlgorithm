@@ -149,7 +149,7 @@ var IA = function (mode) {
 	Player.call(this, mode);
 
 	this.method = IAMethod.MinMax;
-	this.depth = 2;
+	this.depth = 1;
 
 };
 IA.prototype = Object.create(Player.prototype);
@@ -375,7 +375,6 @@ IA.prototype.min_alphaBeta = function (depth, alpha, beta, board, bestMove) {
 				return alpha;
 			}
 		}
-
 
 	}
 
