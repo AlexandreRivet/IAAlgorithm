@@ -170,14 +170,10 @@ IA.prototype.evaluate = function (board) {
 
 IA.prototype.playBestMove = function (board) {
 
-	// var start = new Date().getTime();
-
 	var bestMove = {
 		move: null,
 		eval: 0
 	};
-
-	console.log(this.method);
 
 	switch (this.method) {
 	case IAMethod.MinMax:
@@ -210,12 +206,6 @@ IA.prototype.playBestMove = function (board) {
 		}
 		break;
 	}
-
-	// this.max(this.depth, board, bestMove);
-	// this.max_alphaBeta(this.depth, -50000, 50000, board, bestMove);
-	// this.negamax(this.depth, board, bestMove);
-	// this.negamax_alphaBeta(this.depth, -50000, 50000, board, bestMove);
-	// console.log((new Date().getTime() - start) + 'ms.');
 
 	this.play(board, bestMove.move);
 };

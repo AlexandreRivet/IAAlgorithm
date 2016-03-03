@@ -59,7 +59,12 @@ var DomineeringGame = function (id) {
 		var player = this.players[this.currentPlayer];
 
 		if (!player.canPlay(this.board.board)) {
-			console.log('Je ne peux plus jouer');
+
+			var playerMode = (player instanceof IA) ? 'L\'IA' : 'L\Human';
+			var playerType = (player.initialType == PlayerType.HORI) ? 'Hori' : 'Vert';
+
+			alert(playerMode + ' jouant en ' + playerType + ' a perdu.');
+
 			return;
 		}
 		TIME.start(500.0);
