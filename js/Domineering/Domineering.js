@@ -64,21 +64,21 @@ var DomineeringGame = function (id) {
 
 		if (!player.canPlay(this.board.board)) {
 
-			var playerMode = (player instanceof IA) ? 'AI' : 'L\'Human';
+			var playerMode = (player instanceof IA) ? 'AI' : 'Human';
 			var playerType = (player.initialType == PlayerType.HORI) ? 'horizontal' : 'vertical';
 
 			alert(playerMode + ' playing in ' + playerType + ' loses the game.');
 
 			return;
 		}
-		
+
 		START_TURN = new Date().getTime();
-		
+
 		if (player instanceof IA) {
 			player.playBestMove(this.board);
-			
+
 			TIME_TURN = new Date().getTime() - START_TURN;
-			
+
 			this.update();
 
 			var self = this;
@@ -87,7 +87,7 @@ var DomineeringGame = function (id) {
 			}, 100);
 
 		} else if (player instanceof Human) {
-			this.currentMove = new Move(0, 0, player.initialType);			
+			this.currentMove = new Move(0, 0, player.initialType);
 			this.update();
 		}
 
@@ -118,7 +118,7 @@ var DomineeringGame = function (id) {
 					self.board.move(self.currentMove);
 
 					TIME_TURN = new Date().getTime() - START_TURN;
-					
+
 					self.currentMove = null;
 					self.update();
 

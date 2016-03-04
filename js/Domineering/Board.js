@@ -37,24 +37,24 @@ var Board = function (w, h) {
 		var movesDisplayed = 15;
 		var start = (this.moves.length < movesDisplayed) ? 0 : this.moves.length - movesDisplayed;
 		var j = 0;
-		ctx.font = '11pt Arial';
+		ctx.font = '10pt Arial';
 		for (var i = start; i < this.moves.length; i++) {
 
 			var move = this.moves[i];
 			ctx.fillStyle = (move.vertical) ? 'white' : 'black';
-			ctx.fillText('[' + move.row + ',' + move.col + ']', 50 + this.w * BLOCK_SIZE + 15, 50 + j * 30);
+			ctx.fillText('[' + move.row + ',' + move.col + ']', 50 + this.w * BLOCK_SIZE + 10, 50 + j * 30);
 			j++;
 
 		}
-		
+
 		// Dessin du temps du tour
 		if (TIME_TURN != null) {
-			
+
 			var str = 'Turn duration: ' + TIME_TURN + 'ms';
 			var widthText = ctx.measureText(str).width;
-			
+
 			ctx.fillStyle = 'black';
-			ctx.fillText(str,  (this.w * BLOCK_SIZE) / 2 + 50 - widthText / 2, this.h * BLOCK_SIZE + 75);
+			ctx.fillText(str, (this.w * BLOCK_SIZE) / 2 + 50 - widthText / 2, this.h * BLOCK_SIZE + 75);
 		}
 
 	};

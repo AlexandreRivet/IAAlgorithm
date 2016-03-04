@@ -17,7 +17,7 @@ function init() {
 			$('#SizeGridValue').html(SIZE);
 		}
 	});
-	
+
 	$("#Depth").slider({
 		min: 1,
 		max: 6,
@@ -27,7 +27,7 @@ function init() {
 			$('#DepthValue').html(DEPTH);
 		}
 	});
-	
+
 	$("#TimeAllowed").slider({
 		min: 200,
 		max: 2000,
@@ -44,15 +44,15 @@ function init() {
 
 	$("#TypeOfGame input").change(function () {
 		GAME_MODE = parseInt($('input[name=radio_typeGame]:checked', "#TypeOfGame").val());
-		
+
 		if (GAME_MODE != 3) {
-		
+
 			$('#AIType').show();
-			
+
 		} else {
-			
+
 			$('#AIType').hide();
-			
+
 		}
 	});
 
@@ -62,21 +62,20 @@ function init() {
 
 	$("#AITypeEvaluation input").change(function () {
 		IAMETHOD = parseInt($('input[name=radio_AIType]:checked', "#AITypeEvaluation").val());
-		
+
 		if (IAMETHOD == IAMethod.Negamax_AB_Time ||
-			IAMETHOD == IAMethod.Negamax_AB_Historic_withTime || 
+			IAMETHOD == IAMethod.Negamax_AB_Historic_withTime ||
 			IAMETHOD == IAMethod.Negamax_AB_Killer_withTime) {
-			
+
 			$('#AIDepth').hide();
 			$('#AITimeAllowed').show();
-			
-		}
-		else {
-			
+
+		} else {
+
 			$('#AITimeAllowed').hide();
 			$('#AIDepth').show();
-			
-			
+
+
 		}
 	});
 
@@ -120,19 +119,19 @@ function startDomineering() {
 
 	// Mise à jour des infos supplémentaires
 
-	var setPlayer = function(player) {
-	
+	var setPlayer = function (player) {
+
 		if (player instanceof IA) {
-		
+
 			player.method = IAMETHOD;
 			player.initialDepth = DEPTH;
 			player.timeAllowedToPlay = TIME_ALLOWED;
-			
+
 		}
-			
-		
+
+
 	};
-	
+
 	setPlayer(playerOne);
 	setPlayer(playerTwo);
 
