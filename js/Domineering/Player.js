@@ -208,15 +208,19 @@ IA.prototype.playBestMove = function (board) {
 	case IAMethod.MinMax:
 		this.max(this.initialDepth, board, bestMove);
 		break;
+
 	case IAMethod.MinMax_AB:
 		this.max_alphaBeta(this.initialDepth, -50000, 50000, board, bestMove);
 		break;
+
 	case IAMethod.Negamax:
 		this.negamax(this.initialDepth, board, bestMove);
 		break;
+
 	case IAMethod.Negamax_AB:
 		this.negamax_alphaBeta(this.initialDepth, -50000, 50000, board, bestMove);
 		break;
+
 	case IAMethod.Negamax_AB_Time:
 
 		TIME.start(this.timeAllowedToPlay);
@@ -237,11 +241,13 @@ IA.prototype.playBestMove = function (board) {
 			}
 		}
 		break;
+
 	case IAMethod.Negamax_AB_Killer:
 		this.negamax_alphaBeta_killer(this.initialDepth, -50000, 50000, board, bestMove);
 
 		this.killer = [null, null, null];
 		break;
+
 	case IAMethod.Negamax_AB_Killer_withTime:
 
 		TIME.start(this.timeAllowedToPlay);
@@ -264,6 +270,7 @@ IA.prototype.playBestMove = function (board) {
 
 		this.killer = [null, null, null];
 		break;
+
 	case IAMethod.Negamax_AB_Historic:
 
 		// Reset du tableau
@@ -277,6 +284,7 @@ IA.prototype.playBestMove = function (board) {
 
 		this.history = [];
 		break;
+
 	case IAMethod.Negamax_AB_Historic_withTime:
 
 		// Reset du tableau
@@ -305,8 +313,6 @@ IA.prototype.playBestMove = function (board) {
 		}
 
 		this.history = [];
-
-
 		break;
 	}
 
@@ -760,8 +766,8 @@ IA.prototype.negamax_alphaBeta_killer_withTime = function (depth, alpha, beta, b
 	if (possibilities.length == 0)
 		return -49999;
 
-	if (board.valid(this.killer[this.initialDepth - depth]))
-		possibilities.splice(0, 0, this.killer[this.initialDepth - depth]);
+	if (board.valid(this.killer[this.currentDepth - depth]))
+		possibilities.splice(0, 0, this.killer[this.currentDepth - depth]);
 
 	this.toggleType();
 
@@ -798,7 +804,7 @@ IA.prototype.negamax_alphaBeta_killer_withTime = function (depth, alpha, beta, b
 
 			if (alpha >= beta) {
 
-				this.killer[this.initialDepth - depth] = move;
+				this.killer[this.currentDepth - depth] = move;
 				this.toggleType();
 				return beta;
 
