@@ -156,7 +156,7 @@ var IA = function (mode) {
 	this.initialDepth = 3;
 	this.currentDepth = 1;
 
-	this.timeAllowedToPlay = 2000.0;			// en ms
+	this.timeAllowedToPlay = 2000.0; // en ms
 	this.killer = [null, null, null];
 	this.history = [];
 
@@ -218,9 +218,9 @@ IA.prototype.playBestMove = function (board) {
 		this.negamax_alphaBeta(this.initialDepth, -50000, 50000, board, bestMove);
 		break;
 	case IAMethod.Negamax_AB_Time:
-			
+
 		TIME.start(this.timeAllowedToPlay);
-		
+
 		var tmp = {
 			move: null,
 			eval: 0
@@ -243,9 +243,9 @@ IA.prototype.playBestMove = function (board) {
 		this.killer = [null, null, null];
 		break;
 	case IAMethod.Negamax_AB_Killer_withTime:
-		
+
 		TIME.start(this.timeAllowedToPlay);
-			
+
 		var tmp = {
 			move: null,
 			eval: 0
@@ -273,8 +273,21 @@ IA.prototype.playBestMove = function (board) {
 		for (var element in posA) this.history[posA[element].getCode()] = 0;
 		for (var element in posB) this.history[posB[element].getCode()] = 0;
 
+		this.negamax_alphaBeta_historic(this.initialDepth, -50000, 50000, board, bestMove);
+
+		this.history = [];
+		break;
+	case IAMethod.Negamax_AB_Historic_withTime:
+
+		// Reset du tableau
+		var board_tmp = new Board(board.w, board.h);
+		var posA = this.getHoriPossibilities(board_tmp.board);
+		var posB = this.getVertPossibilities(board_tmp.board);
+		for (var element in posA) this.history[posA[element].getCode()] = 0;
+		for (var element in posB) this.history[posB[element].getCode()] = 0;
+
 		TIME.start(this.timeAllowedToPlay);
-			
+
 		var tmp = {
 			move: null,
 			eval: 0
@@ -292,6 +305,8 @@ IA.prototype.playBestMove = function (board) {
 		}
 
 		this.history = [];
+
+
 		break;
 	}
 
