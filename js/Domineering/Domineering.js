@@ -87,7 +87,17 @@ var DomineeringGame = function (id) {
 			}, 100);
 
 		} else if (player instanceof Human) {
-			this.currentMove = new Move(0, 0, player.initialType);
+			
+			// Soit on n'a pas de move donc c'est un nouveau
+			if (this.board.moves.length < 2) {
+				this.currentMove = new Move(0, 0, player.initialType);
+			}
+			// Soit on récupère son ancien move comme base
+			else {
+				var myLastMove = this.board.moves[this.board.moves.length - 2];
+				this.currentMove = new Move(myLastMove.row, myLastMove.col, player.initialType);
+			}
+				
 			this.update();
 		}
 
